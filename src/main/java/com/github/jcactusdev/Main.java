@@ -2,17 +2,12 @@ package com.github.jcactusdev;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
-
-import static java.lang.Thread.sleep;
-
-import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) {
 
         List<Bank> banks = new ArrayList<>(3);
-        banks.add(new Bank(0, 1500, 1));
+        banks.add(new Bank(0, 1500));
         banks.add(new Bank(1, 2000, 2));
         banks.add(new Bank(2, 3000, 3));
 
