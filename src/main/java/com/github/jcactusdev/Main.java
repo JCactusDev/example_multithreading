@@ -16,15 +16,14 @@ public class Main {
         banks.forEach(bank -> bank
                 .getAccounts()
                 .stream()
-                .filter(account -> account
-                        .getBalance() > 0)
-                        .forEach(account -> {
-                            try {
-                                bank.transfer(account.getNumber(), toBank, 0, 1);
-                            } catch (InterruptedException e) {
-                                Thread.currentThread().interrupt();
-                            }
+                .filter(account -> account.getBalance() > 0)
+                .forEach(account -> {
+                        try {
+                            bank.transfer(account.getNumber(), toBank, 0, 1);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
                         }
+                    }
                 )
         );
 
