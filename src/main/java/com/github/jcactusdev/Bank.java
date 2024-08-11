@@ -54,7 +54,10 @@ public class Bank {
     public synchronized int getTotalBalance() {
         bankLock.lock();
         try {
-            return accounts.stream().mapToInt(BankAccount::getBalance).sum();
+            return accounts
+                    .stream()
+                    .mapToInt(BankAccount::getBalance)
+                    .sum();
         } finally {
             bankLock.unlock();
         }
@@ -77,13 +80,17 @@ public class Bank {
     }
 
     public void transferEverythingToAccount(int toAccountId) {
-        accounts.stream().filter(a -> a.getNumber() != toAccountId).forEach(account -> {
-            try {
-                transfer(account.getNumber(), toAccountId, account.getBalance());
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
+        accounts
+            .stream()
+            .filter(a -> a.getNumber() != toAccountId)
+            .forEach(account -> {
+                try {
+                    transfer(account.getNumber(), toAccountId, account.getBalance());
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
             }
-        });
+        );
     }
 
     public synchronized void transfer(int fromAccountId, Bank toBank, int toAccountId, int amount) throws InterruptedException {
