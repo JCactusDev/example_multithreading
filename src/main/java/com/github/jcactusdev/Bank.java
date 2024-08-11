@@ -36,8 +36,7 @@ public class Bank {
         bankLock.lock();
         try {
             return accounts.get(i);
-        }
-        finally {
+        } finally {
             bankLock.unlock();
         }
     }
@@ -71,9 +70,8 @@ public class Bank {
         bankLock.lock();
         try {
             accounts.get(fromAccountId).deposit(-amount);
-            System.out.printf(" %d from bank[%d] account[%d] to bank[%d], account[%d]", amount, number, fromAccountId, number, toAccountId);
             accounts.get(toAccountId).deposit(amount);
-            System.out.printf(" to Balance: %d\n", getBalance(toAccountId));
+            System.out.printf(" %d from bank[%d], account[%d] to bank[%d], account[%d] to Balance: %d\n", amount, number, fromAccountId, number, toAccountId, getBalance(toAccountId));
         } finally {
             bankLock.unlock();
         }
@@ -81,27 +79,25 @@ public class Bank {
 
     public void transferEverythingToAccount(int toAccountId) {
         accounts
-            .stream()
-            .filter(a -> a.getNumber() != toAccountId)
-            .forEach(account -> {
-                try {
-                    transfer(account.getNumber(), toAccountId, account.getBalance());
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                }
-            }
-        );
+                .stream()
+                .filter(a -> a.getNumber() != toAccountId && a.getBalance() > 0)
+                .forEach(account -> {
+                            try {
+                                transfer(account.getNumber(), toAccountId, account.getBalance());
+                            } catch (InterruptedException e) {
+                                Thread.currentThread().interrupt();
+                            }
+                        }
+                );
     }
 
     public synchronized void transfer(int fromAccountId, Bank toBank, int toAccountId, int amount) throws InterruptedException {
         bankLock.lock();
         try {
             accounts.get(fromAccountId).deposit(-amount);
-            System.out.printf(" %d from bank[%d] account[%d] to bank[%d], account[%d]", amount, number, fromAccountId, toBank.getNumber(), toAccountId);
             toBank.getAccount(toAccountId).deposit(amount);
-            System.out.printf(" to Balance: %d\n", toBank.getBalance(toAccountId));
-        }
-        finally {
+            System.out.printf(" %d from bank[%d], account[%d] to bank[%d], account[%d] to Balance: %d\n", amount, number, fromAccountId, toBank.getNumber(), toAccountId, toBank.getBalance(toAccountId));
+        } finally {
             bankLock.unlock();
         }
     }
