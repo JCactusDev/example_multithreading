@@ -65,7 +65,7 @@ public class Main {
     }
 
     public static class TransferCompleted implements Runnable {
-        private List<Bank> banks;
+        private final List<Bank> banks;
         private final Bank targetBank;
 
         public TransferCompleted(List<Bank> banks, Bank targetBank) {
